@@ -1,0 +1,27 @@
+import React from 'react'
+
+const Register = () => {
+  return (
+    <div className='container'>
+      <h1>Registeration</h1>
+      <div className='row'>
+        <div className='col-md-6 mx-auto'>
+          <form className='mt-5'>
+            <div class="mb-3">
+              <label for="inputEmail1" className="form-label">Email address</label>
+              <input type="email" className="form-control" id="inputEmail1" aria-describedby="emailHelp" />
+              <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
+            </div>
+            <div class="mb-3">
+              <label for="inputPassword1" className="form-label">Password</label>
+              <input type="password" className="form-control" id="inputPassword1" />
+            </div>
+            <button type="submit" className="btn btn-primary">Register</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default Register
