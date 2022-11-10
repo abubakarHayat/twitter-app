@@ -19,7 +19,7 @@ const Navbar = () => {
             </li>
           </ul>
           <Link to='/login'><button className="btn btn-outline-success">Log In</button></Link>
-          <Link to='/register'><button className="btn btn-outline-primary">Sign Up</button></Link>
+          <Link to='/signup'><button className="btn btn-outline-primary">Sign Up</button></Link>
         </div>
       </div>
     </nav>

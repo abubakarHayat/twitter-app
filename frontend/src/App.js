@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 
 import Navbar from './components/Navbar/Navbar';
 import Login from './pages/Login/Login'
-import Register from './pages/Register/Register';
+import Signup from './pages/Signup/Signup';
 
 import './App.css';
 
@@ -17,8 +17,8 @@ function App() {
           element={<Login />}
           />
         <Route
-          path='/register'
-          element={<Register />}
+          path='/signup'
+          element={<Signup />}
           />
       </Routes>
     </div>

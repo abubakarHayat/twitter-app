@@ -1,15 +1,16 @@
-import React, { useState } from "react";
-import { useAuthContext } from './useAuthContext'
+import { useState } from "react";
+import useAuthContext from './useAuthContext'
 
-const useRegister = (email, firstName, lastName, password, dob) => {
+const useSignup = (firstName, lastName, email, password, dob) => {
   const [isLoading, setIsLoading] = useState(null)
   const [error, setError] = useState(null)
+  const { dispatch } = useAuthContext()
 
-  const register = async (email, password) => {
+  const signup = async (firstName, lastName, email, password, dob) => {
     setIsLoading(true)
     setError(null)
 
-    const response = await fetch('/register', {
+    const response = await fetch('/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({firstName, lastName, email, password, dob})
@@ -21,9 +22,14 @@ const useRegister = (email, firstName, lastName, password, dob) => {
       setError(json.error)
     }
     if (response.ok) {
+      setIsLoading(false)
       console.log('signup successful')
       // localStorage.setItem('user', JSON.stringify(json))
     }
   }
 
+  return { signup, isLoading, error}
+
 }
+
+export default useSignup
