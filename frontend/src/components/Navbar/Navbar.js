@@ -18,8 +18,8 @@ const Navbar = () => {
               <a className="nav-link" href="/">Link</a>
             </li>
           </ul>
-          <Link to='/login'><button class="btn btn-outline-success">Log In</button></Link>
-          <Link to='/register'><button class="btn btn-outline-primary">Sign Up</button></Link>
+          <Link to='/login'><button className="btn btn-outline-success">Log In</button></Link>
+          <Link to='/register'><button className="btn btn-outline-primary">Sign Up</button></Link>
         </div>
       </div>
     </nav>
