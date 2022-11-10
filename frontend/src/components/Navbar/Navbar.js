@@ -1,7 +1,16 @@
 import React from 'react'
 import { Link }  from 'react-router-dom'
+import useLogout from '../../hooks/useLogout'
+import useAuthContext from '../../hooks/useAuthContext'
 
 const Navbar = () => {
+  const { logout } = useLogout()
+  const { user } = useAuthContext()
+
+  const handleClick = () => {
+    logout()
+  }
+
   return (
     <nav className="navbar navbar-expand-lg bg-light">
       <div className="container-fluid">
@@ -18,8 +27,20 @@ const Navbar = () => {
               <a className="nav-link" href="/">Link</a>
             </li>
           </ul>
-          <Link to='/login'><button className="btn btn-outline-success">Log In</button></Link>
-          <Link to='/signup'><button className="btn btn-outline-primary">Sign Up</button></Link>
+          { user &&
+            ( <div>
+                <span>{user.email}</span>
+                <button className="btn btn-outline-warning" onClick={handleClick}>Log Out</button>
+              </div>
+              )
+          }
+          { !user &&
+            ( <div>
+                <Link to='/login'><button className="btn btn-outline-success">Log In</button></Link>
+                <Link to='/signup'><button className="btn btn-outline-primary">Sign Up</button></Link>
+              </div>
+              )
+          }
         </div>
       </div>
     </nav>
