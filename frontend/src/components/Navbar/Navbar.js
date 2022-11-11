@@ -24,7 +24,7 @@ const Navbar = () => {
               <a className="nav-link" aria-current="page" href='/'>Tweets</a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/">Link</a>
+              <Link to='/profile' className="nav-link" >Profile</Link>
             </li>
           </ul>
           { user &&
