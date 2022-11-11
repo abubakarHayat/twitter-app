@@ -35,7 +35,28 @@ const signupUser = async (req, res) => {
   }
 }
 
-const updateProfile = async (req, res) => {
+const getUserProfile = async (req, res) => {
+  const _id = req.params.id
+  const user = await User.findById({_id})
+
+  if (!user){
+    res.status(404).json({error: "No such user exist"})
+  }else{
+    res.status(200).json({user})
+  }
+
+
+}
+const updateUserProfile = async (req, res) => {
+  const _id = req.params.id
+  const { email, password, firstName, lastName, dob } = req.body
+
+  try{
+    const user = await User.validateAndUpdateUser(_id, firstName, lastName, email, password, dob)
+    res.status(200).json({user})
+  }catch (error){
+    res.status(404).json({error: error.message})
+  }
 
 }
 
