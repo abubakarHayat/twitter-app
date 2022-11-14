@@ -75,29 +75,54 @@ userSchema.statics.login =  async function(email, password) {
 
 userSchema.statics.validateAndUpdateUser = async function (_id, firstName, lastName, email, password, dob){
 
-  if( !email || !password || !firstName || !lastName || !dob) {
-    throw Error("All fields must be filled")
+  if( !email && !password && !firstName && !lastName && !dob) {
+    throw Error("Empty fields, cannot update!")
   }
-  if(!validator.isEmail(email)){
-    throw Error("Email is not valid")
-  }
-  if(!validator.isStrongPassword(password)){
-    throw Error('Password is not strong enough')
-  }
-
-  const exists = await this.findOne({ email })
-  if (exists) {
-    throw Error('Email already in use!')
-  }
-  const salt = await bcrypt.genSalt(10)
-  const encryptedPassword = await bcrypt.hash(password, salt)
-
-  this.findOneAndUpdate({_id}, {firstName, lastName, email, encryptedPassword, dob}, {new: true} ,(error, result) => {
-    if (error){
-      throw Error(error.message)
+  let updationObj = {}
+  let updationMsg = {}
+  if(email) {
+    if( !validator.isEmail(email)){
+      throw Error('Email format is not valid')
     }
-    return result
-  })
+    const exists = await this.findOne({ email })
+    if (exists) {
+      throw Error('Email already in use!')
+    }else{
+      updationObj.email = email
+      updationMsg.email = email
+    }
+  }
+  if(password){
+    if(!validator.isStrongPassword(password)){
+      throw Error('Password is not strong enough')
+    }
+    const salt = await bcrypt.genSalt(10)
+    const encryptedPassword = await bcrypt.hash(password, salt)
+    updationObj.encryptedPassword = encryptedPassword
+    updationMsg.password = "Password updated"
+
+  }
+  if(firstName){
+    updationObj.firstName = firstName
+    updationMsg.firstName = "First Name updated"
+  }
+  if(lastName){
+    updationObj.lastName
+    updationMsg.lastName = "Last Name updated"
+  }
+  if(dob){
+    updationObj.dob = dob
+    updationMsg.dob = "DOB updated"
+  }
+
+  try {
+    const res = await this.findOneAndUpdate({_id}, updationObj, {new: true})
+    res.encryptedPassword = null
+    return res
+  }catch (error){
+    throw Error(error.message)
+  }
+
 }
 
 module.exports = mongoose.model('User', userSchema)

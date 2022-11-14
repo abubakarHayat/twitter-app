@@ -4,3 +4,7 @@
 .error {
   border-color: red;
 }
+.alert {
+  border-color: yellowgreen;
+}
+

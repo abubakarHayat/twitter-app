@@ -1,6 +1,6 @@
 const express = require('express')
 const requireAuth = require('../middlewares/requireAuth')
-const { loginUser, signupUser } = require('../controllers/userController')
+const { loginUser, signupUser, getUserProfile, updateUserProfile } = require('../controllers/userController')
 
 const router = express.Router()
 
@@ -10,8 +10,8 @@ router.post('/signup', signupUser)
 
 router.use(requireAuth)
 
-router.get('/profile', (req, res) => {
-  res.json({msg: "profile"})
-})
+router.get('/:id', getUserProfile)
+
+router.patch('/:id', updateUserProfile)
 
 module.exports = router
