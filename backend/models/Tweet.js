@@ -1,14 +1,12 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
 
 const Schema = mongoose.Schema
 
 const tweetSchema = new Schema({
-  creator: {
+  _creator: {
     type: Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
-    unique: true
+    required: true
   },
   body: {
     type: String,

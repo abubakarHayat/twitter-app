@@ -6,6 +6,8 @@ const mongoose = require('mongoose')
 
 const userRoutes = require('./routes/userRoutes')
 
+const tweetRoutes = require('./routes/tweetRoutes')
+
 const app = express()
 
 app.use(express.json())
@@ -13,6 +15,8 @@ app.use(express.json())
 app.get('/', (req, res) => {
   res.json({msg: 'Welcome to twitter!'})
 })
+
+app.use('/tweets', tweetRoutes)
 
 app.use(userRoutes)
 

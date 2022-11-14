@@ -4,7 +4,16 @@ const { getTweet, getTweets, createTweet, deleteTweet, updateTweet } = require('
 
 const router = express.Router()
 
-router.post('/tweet', createTweet)
+router.use(requireAuth)
 
+router.get('/', getTweets)
+
+router.post('/', createTweet)
+
+router.get('/:id', getTweet)
+
+router.patch('/:id', updateTweet)
+
+router.delete('/:id', deleteTweet)
 
 module.exports = router
