@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from './components/Navbar/Navbar';
 import Login from './pages/Login/Login'
 import Signup from './pages/Signup/Signup';
+import Tweets from "./pages/Tweets/Tweets";
 import useAuthContext from "./hooks/useAuthContext";
 
 import './App.css';
@@ -16,6 +17,10 @@ function App() {
     <div className="App">
       <Navbar />
       <Routes>
+        <Route
+          path='/'
+          element={user ? <Tweets /> : <Navigate to='/signup' />}
+          />
         <Route
           path='/login'
           element={!user ? <Login /> : <Navigate to='/profile' />}
