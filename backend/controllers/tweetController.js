@@ -3,11 +3,10 @@ const mongoose = require('mongoose')
 const Tweet = require('../models/Tweet')
 
 const getTweets = async (req, res) => {
-  const _creator = req.user._id
 
-  Tweet.find({ _creator })
+  Tweet.find({}).sort({createdAt: -1}).populate('_creator', 'firstName')
   .then((result) => {
-    res.status(200).json({ result })
+    res.status(200).json(result)
   })
   .catch((error) => {
     res.status(400).json({ error: error.message })
@@ -34,18 +33,27 @@ const createTweet = async (req, res) => {
   let { body, likes: likesCount } = req.body
   const _creator =  req.user._id
 
-  try {
-
     if (!body){
       throw Error('Tweet body cannot be blank')
     }
     likesCount = null ?? 0
-    const tweet = await Tweet.create({ body, likesCount, _creator })
-    res.status(200).json({ tweet })
 
-  }catch(error){
-    return res.status(400).json({ error: error.message })
+  //   Tweet.findOneAndUpdate({_id:mongoose.Types.ObjectId()}, { body, likesCount, _creator }, {
+  //     new: true,
+  //     upsert: true,
+  //     runValidators: true,
+  //     setDefaultsOnInsert: true,
+  //     populate: {'_creator', 'firstName'}
+  // })
+  try {
+    const tweet = await Tweet.create({ body, likesCount, _creator })
+    const result = await tweet.populate('_creator', 'firstName')
+
+    res.status(200).json(result)
+  } catch (error){
+    res.status(422).json({ error: error.message })
   }
+
 }
 
 const deleteTweet = async (req, res) => {
@@ -55,7 +63,7 @@ const deleteTweet = async (req, res) => {
     return res.status(404).json({error: "Not a valid ID"})
   }
 
-  Tweet.deleteOne({_id})
+  Tweet.findOneAndDelete({_id})
   .then((result) => {
     res.status(200).json(result)
   })
@@ -73,12 +81,13 @@ const updateTweet = async (req, res) => {
   if(!body){
     return res.status(400).json({ error: "Tweet body cannot be blank" })
   }
-  Tweet.findByIdAndUpdate(_id, {body, likesCount}, (err, doc) => {
-    if (err){
-     res.status(422).json({ error: "Tweet cannot be updated" })
-    }else{
-      res.status(200).json({ doc })
-    }
+  Tweet.findByIdAndUpdate(_id, {body, likesCount}, {new: true })
+  .populate('_creator', 'firstName')
+  .then((doc) => {
+      res.status(200).json(doc)
+  })
+  .catch((error) => {
+    res.status(422).json({ error: error.message })
   })
 }
 

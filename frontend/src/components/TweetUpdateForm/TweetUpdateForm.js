@@ -1,17 +1,16 @@
 import React, { useState } from 'react'
-import styles from './TweetForm.module.css'
 
 import useTweetsContext from '../../hooks/useTweetsContext'
 import useAuthContext from '../../hooks/useAuthContext'
 
-const TweetForm = () => {
-  const [body, setBody] = useState('')
+const TweetUpdateForm = ({ _id, initialBody }) => {
+  const [body, setBody] = useState(initialBody)
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const { dispatch } = useTweetsContext()
   const { user } = useAuthContext()
 
-  const handleSubmit = async (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault()
 
     if (!user){
@@ -19,8 +18,8 @@ const TweetForm = () => {
       return
     }
     setIsLoading(true)
-    const response = await fetch('/tweets', {
-      method: 'POST',
+    const response = await fetch(`/tweets/${_id}`, {
+      method: 'PATCH',
       body: JSON.stringify({body}),
       headers: {
         'Content-Type': 'application/json',
@@ -38,8 +37,7 @@ const TweetForm = () => {
       setError('')
       setIsLoading(false)
       setBody('')
-      console.log(json)
-      dispatch({type: 'CREATE_TWEET', payload: json})
+      dispatch({type: 'UPDATE_TWEET', payload: json})
     }
 
   }
@@ -47,7 +45,7 @@ const TweetForm = () => {
   return (
       <div className='row'>
         <div className='col-md-10 mx-auto'>
-          <form className={["mt-5", styles.TweetForm].join(' ')}>
+          <form className="mt-5">
             <div className="mb-3">
               <textarea
                 className="form-control" id="validationTextarea"
@@ -56,7 +54,7 @@ const TweetForm = () => {
                 value={body}
                 required />
             </div>
-            <button type="submit" disabled={isLoading} onClick={handleSubmit} className="btn btn-primary">Tweet</button>
+            <button type="submit" disabled={isLoading} onClick={handleUpdate} className="btn btn-primary">Update</button>
           </form>
         </div>
         {error && <div className='error'>{error}</div>}
@@ -64,4 +62,4 @@ const TweetForm = () => {
   )
 }
 
-export default TweetForm
+export default TweetUpdateForm

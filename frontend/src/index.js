@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from "react-router-dom";
 import { AuthContextProvider } from './contexts/AuthContext'
+import { TweetsContextProvider } from './contexts/TweetsContext';
 
 import './index.css';
 import App from './App';
@@ -10,9 +11,11 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <AuthContextProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <TweetsContextProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </TweetsContextProvider>
     </AuthContextProvider>
   </React.StrictMode>
 );

@@ -1,4 +1,4 @@
-import { createContext, useReducer, useEffect } from "react";
+import { createContext, useReducer } from "react";
 
 const TweetsContext = createContext()
 
@@ -7,11 +7,18 @@ const tweetsReducer = (state, action) => {
     case 'SET_TWEETS':
       return { tweets: action.payload }
     case 'CREATE_TWEET':
-      return { tweets: null }
+      return {
+        tweets: [action.payload, ...state.tweets]
+      }
     case 'UPDATE_TWEET':
-      return { tweets: action.payload }
+      const index = state.tweets.findIndex(t => t._id === action.payload._id)
+      const result = [...state.tweets]
+      result[index] = action.payload
+      return { tweets: result }
     case 'DELETE_TWEET':
-      return { tweets: action.payload }
+      return {
+        tweets: state.tweets.filter((t) => ( t._id !== action.payload._id))
+      }
     default:
       return state
   }
@@ -21,13 +28,13 @@ const tweetsReducer = (state, action) => {
 const TweetsContextProvider = ({ children }) => {
   const  [state, dispatch] = useReducer(tweetsReducer, { tweets: null })
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user'))
+  // useEffect(() => {
+  //   const user = JSON.parse(localStorage.getItem('user'))
 
-    if (user){
-      dispatch({type: 'LOGIN', payload: user})
-    }
-  }, [])
+  //   if (user){
+  //     dispatch({type: 'LOGIN', payload: user})
+  //   }
+  // }, [])
 
   return (
     <TweetsContext.Provider value={{...state, dispatch}}>
