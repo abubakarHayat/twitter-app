@@ -8,6 +8,8 @@ const userRoutes = require('./routes/userRoutes')
 
 const tweetRoutes = require('./routes/tweetRoutes')
 
+const commentRoutes = require('./routes/commentRoutes')
+
 const app = express()
 
 app.use(express.json({ limit: '2mb', extended: true}))
@@ -18,6 +20,8 @@ app.get('/', (req, res) => {
 })
 
 app.use('/tweets', tweetRoutes)
+
+app.use('/tweet', commentRoutes)
 
 app.use(userRoutes)
 

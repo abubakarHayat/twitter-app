@@ -1,4 +1,3 @@
-const e = require('express')
 const mongoose = require('mongoose')
 const cloudinary = require('../utils/cloudinary')
 const Tweet = require('../models/Tweet')
