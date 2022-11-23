@@ -14,6 +14,9 @@ const Tweets = () => {
   const [isLoading, setIsLoading] = useState(false)
 
 
+  const checkLiked = (checkList) => {
+    return checkList.includes(user._id)
+  }
   useEffect(() => {
     if (!user){
       setError('User must ne logged in!')
@@ -36,6 +39,7 @@ const Tweets = () => {
       if(response.ok) {
         setIsLoading(false)
         setError('')
+        console.log(json)
         dispatch({ type: 'SET_TWEETS', payload: json })
       }
     }
@@ -48,7 +52,14 @@ const Tweets = () => {
       {isLoading && <div>'Tweets loading, please wait!'</div>}
       <TweetForm />
       {tweets && tweets.map(tweet => (
-        <Tweet firstName={tweet._creator.firstName} body={tweet.body} key={tweet._id} _id={tweet._id} />
+        <Tweet
+          firstName={tweet._creator.firstName} body={tweet.body}
+          key={tweet._id} _id={tweet._id}
+          imageSrc={tweet.image && tweet.image.url}
+          profileImg={tweet._creator.image.url}
+          likesC={tweet.likesCount}
+          like={checkLiked(tweet.likedBy)}
+        />
       ))}
       {error && <div className='error'>{error}</div>}
     </Container>

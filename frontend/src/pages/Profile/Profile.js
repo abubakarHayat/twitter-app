@@ -7,6 +7,7 @@ const Profile = () => {
   const [lastName, setLastName] = useState('')
   const [password, setPassword] = useState('')
   const [dob, setDob] = useState('')
+  const [image, setImage] = useState(null)
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [alert, setAlert] = useState('')
@@ -17,6 +18,7 @@ const Profile = () => {
     if (!user){
       return
     }
+    const data = JSON.stringify({firstName, lastName, email, password, dob, image})
     setIsLoading(true)
     const response = await fetch(`/${user._id}`, {
       method: 'PATCH',
@@ -24,16 +26,16 @@ const Profile = () => {
         'Content-Type': 'application/json',
         'Authorization': user.token
       },
-      body: JSON.stringify({firstName, lastName, email, password, dob})
+      body: data
     })
 
     const json = await response.json()
     if (!response.ok){
       setError(json.error)
       setIsLoading(false)
-      console.log("hello GGG")
     }
     if (response.ok){
+      console.log(json)
       setIsLoading(false)
       setError('')
       setAlert('Profile succesfully updated!')
@@ -45,6 +47,16 @@ const Profile = () => {
       }
     }
   }
+
+  const onImageUpload = (e) => {
+    const imageFile = e.target.files[0]
+    const reader = new FileReader()
+    reader.readAsDataURL(imageFile)
+    reader.onloadend = () => {
+      setImage(reader.result)
+    }
+  }
+
   return (
     <div className='container'>
       <h1>Profile</h1>
@@ -93,6 +105,12 @@ const Profile = () => {
                 value={dob}
               />
               <span id="dateSelected"></span>
+            </div>
+            <div className='my-3'>
+              <input className="form-control form-control-md"
+                id="formFile" type="file"
+                onChange={onImageUpload}
+              />
             </div>
             <button type="submit" disabled={isLoading} className="btn btn-primary">Update profile</button>
           </form>

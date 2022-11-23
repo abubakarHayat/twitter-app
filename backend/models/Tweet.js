@@ -15,7 +15,21 @@ const tweetSchema = new Schema({
   likesCount: {
     type: Number,
     required: true
-  }
+  },
+  image:{
+    publicId: {
+      type: String
+    },
+    url: {
+      type: String
+    }
+  },
+  likedBy: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
+    }
+  ]
 }, { timestamps: true })
 
 module.exports = mongoose.model('Tweet', tweetSchema)

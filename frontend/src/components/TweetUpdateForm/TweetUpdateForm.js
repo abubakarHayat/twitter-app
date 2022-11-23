@@ -43,22 +43,20 @@ const TweetUpdateForm = ({ _id, initialBody }) => {
   }
 
   return (
-      <div className='row'>
-        <div className='col-md-10 mx-auto'>
-          <form className="mt-5">
-            <div className="mb-3">
-              <textarea
-                className="form-control" id="validationTextarea"
-                placeholder="What's happening?"
-                onChange={(e) => setBody(e.target.value)}
-                value={body}
-                required />
-            </div>
-            <button type="submit" disabled={isLoading} onClick={handleUpdate} className="btn btn-primary">Update</button>
-          </form>
+    <>
+      <form className="mt-5">
+        <div className="mb-3">
+          <textarea
+            className="form-control" id="validationTextarea"
+            placeholder="What's happening?"
+            onChange={(e) => setBody(e.target.value)}
+            value={body}
+            required />
         </div>
-        {error && <div className='error'>{error}</div>}
-      </div>
+        <button type="submit" disabled={isLoading} onClick={handleUpdate} className="btn btn-primary">Update</button>
+      </form>
+      {error && <div className='error'>{error}</div>}
+    </>
   )
 }
 

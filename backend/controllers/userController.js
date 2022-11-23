@@ -1,6 +1,7 @@
 const User = require('../models/User')
 const jwt = require('jsonwebtoken')
 const { mongoose } = require('mongoose')
+const cloudinary = require('../utils/cloudinary')
 
 const createToken = (_id) => {
   return jwt.sign({_id}, process.env.JWT_SECRET, { expiresIn: '3d' })
@@ -13,7 +14,7 @@ const loginUser = async (req, res) => {
     const user = await User.login(email, password)
     const token = createToken(user._id)
 
-    res.status(200).json({email, _id: user._id, token})
+    res.status(200).json({email, _id: user._id, token, image: user.image.url})
 
   }catch(error){
     res.status(400).json({error: error.message})
@@ -23,13 +24,22 @@ const loginUser = async (req, res) => {
 
 
 const signupUser = async (req, res) => {
-  const { email, password, firstName, lastName, dob } = req.body
+  const { email, password, firstName, lastName, dob, image } = req.body
 
   try{
-    const user = await User.signup(firstName, lastName, email, password, dob)
+    let uploadResult = {
+      publicId: null,
+      url: null
+    }
+    if (image){
+      uploadResult = await cloudinary.uploader.upload(image, {
+        folder: 'users'
+      })
+    }
+    const user = await User.signup(firstName, lastName, email, password, dob, uploadResult)
     const token = createToken(user._id)
 
-    res.status(200).json({email, _id: user._id, token})
+    res.status(200).json({email, _id: user._id, token, image: user.image.url})
 
   }catch(error){
     res.status(400).json({error: error.message})
@@ -55,11 +65,20 @@ const updateUserProfile = async (req, res) => {
   if(req.user._id != _id){
     return res.status(400).json({error: "Access denied"})
   }
-  const { email, password, firstName, lastName, dob } = req.body
+  const { email, password, firstName, lastName, dob, image } = req.body
+  let uploadResult = {
+    publicId: null,
+    url: null
+  }
+  if (image){
+    uploadResult = await cloudinary.uploader.upload(image, {
+      folder: 'users'
+    })
+  }
 
   try{
-    const updationMsg = await User.validateAndUpdateUser(_id, firstName, lastName, email, password, dob)
-    res.status(200).json(updationMsg)
+    const result = await User.validateAndUpdateUser(_id, firstName, lastName, email, password, dob, uploadResult)
+    res.status(200).json(result)
   }catch (error){
     res.status(404).json({error: error.message})
   }

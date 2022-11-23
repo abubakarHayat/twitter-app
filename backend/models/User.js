@@ -26,16 +26,18 @@ const userSchema = new Schema({
     type: Date,
     required: true
   },
-  tweets: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'User'
+  image:{
+    publicId: {
+      type: String
+    },
+    url: {
+      type: String
     }
-  ]
+  }
 
 }, { timestamps: true })
 
-userSchema.statics.signup = async function (firstName, lastName, email, password, dob) {
+userSchema.statics.signup = async function (firstName, lastName, email, password, dob, uploadResult) {
 
   if( !email || !password || !firstName || !lastName || !dob) {
     throw Error("All fields must be filled")
@@ -54,7 +56,12 @@ userSchema.statics.signup = async function (firstName, lastName, email, password
   const salt = await bcrypt.genSalt(10)
   const encryptedPassword = await bcrypt.hash(password, salt)
 
-  const user = await this.create( {firstName, lastName, email, encryptedPassword, dob} )
+  image = {
+    publicId: uploadResult.public_id,
+    url: uploadResult.secure_url
+  }
+
+  const user = await this.create( {firstName, lastName, email, encryptedPassword, dob, image} )
 
   return user
 }
@@ -79,9 +86,9 @@ userSchema.statics.login =  async function(email, password) {
   return user
 }
 
-userSchema.statics.validateAndUpdateUser = async function (_id, firstName, lastName, email, password, dob){
+userSchema.statics.validateAndUpdateUser = async function (_id, firstName, lastName, email, password, dob, uploadResult){
 
-  if( !email && !password && !firstName && !lastName && !dob) {
+  if( !email && !password && !firstName && !lastName && !dob && !uploadResult) {
     throw Error("Empty fields, cannot update!")
   }
   let updationObj = {}
@@ -119,6 +126,10 @@ userSchema.statics.validateAndUpdateUser = async function (_id, firstName, lastN
   if(dob){
     updationObj.dob = dob
     updationMsg.dob = "DOB updated"
+  }
+  updationObj.image = {
+    publicId: uploadResult.public_id,
+    url: uploadResult.secure_url
   }
 
   try {

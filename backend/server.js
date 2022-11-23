@@ -10,7 +10,8 @@ const tweetRoutes = require('./routes/tweetRoutes')
 
 const app = express()
 
-app.use(express.json())
+app.use(express.json({ limit: '2mb', extended: true}))
+app.use(express.urlencoded({limit: "10mb", extended: true, parameterLimit: 50000}))
 
 app.get('/', (req, res) => {
   res.json({msg: 'Welcome to twitter!'})

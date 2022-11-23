@@ -3,6 +3,8 @@ import { Link }  from 'react-router-dom'
 import useLogout from '../../hooks/useLogout'
 import useAuthContext from '../../hooks/useAuthContext'
 
+import './Navbar.css'
+
 const Navbar = () => {
   const { logout } = useLogout()
   const { user } = useAuthContext()
@@ -28,10 +30,14 @@ const Navbar = () => {
             </li>
           </ul>
           { user &&
-            ( <div>
-                <span>{user.email}</span>
-                <button className="btn btn-outline-warning" onClick={handleClick}>Log Out</button>
+            ( <>
+              <button className="btn btn-outline-warning" onClick={handleClick}>Log Out</button>
+              <div className='user-profile-sm'>
+                <img src={user.image} alt='profile' className='rounded-circle' style={{width: "50px"}}/>
+                  {console.log(user)}
+                {<p>{user.email}</p>}
               </div>
+              </>
               )
           }
           { !user &&

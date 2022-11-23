@@ -7,14 +7,21 @@ const Signup = () => {
   const [lastName, setLastName] = useState('')
   const [password, setPassword] = useState('')
   const [dob, setDob] = useState('')
+  const [image, setImage] = useState(null)
   const { signup, error, isLoading } = useSignup()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    await signup(firstName, lastName, email, password, dob)
-
-    console.log(email, password, dob)
+    await signup(firstName, lastName, email, password, dob, image)
+  }
+  const onImageUpload = (e) => {
+    const imageFile = e.target.files[0]
+    const reader = new FileReader()
+    reader.readAsDataURL(imageFile)
+    reader.onloadend = () => {
+      setImage(reader.result)
+    }
   }
   return (
     <div className='container'>
@@ -63,6 +70,12 @@ const Signup = () => {
                 value={dob} required
               />
               <span id="dateSelected"></span>
+            </div>
+            <div className='my-3'>
+              <input className="form-control form-control-md"
+                id="formFile" type="file"
+                onChange={onImageUpload}
+              />
             </div>
             <button type="submit" disabled={isLoading} className="btn btn-primary">Singup</button>
           </form>

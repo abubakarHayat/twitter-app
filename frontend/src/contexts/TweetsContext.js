@@ -19,6 +19,12 @@ const tweetsReducer = (state, action) => {
       return {
         tweets: state.tweets.filter((t) => ( t._id !== action.payload._id))
       }
+    // case 'SET_TWEET_LIKES':
+    //   const tweetsTemp = [...state.tweets]
+    //   tweetsTemp.map((tweet) => {
+    //     return tweet.likedby = [...action.payload]
+    //   })
+    //  return { tweets: tweetsTemp }
     default:
       return state
   }
@@ -27,14 +33,6 @@ const tweetsReducer = (state, action) => {
 
 const TweetsContextProvider = ({ children }) => {
   const  [state, dispatch] = useReducer(tweetsReducer, { tweets: null })
-
-  // useEffect(() => {
-  //   const user = JSON.parse(localStorage.getItem('user'))
-
-  //   if (user){
-  //     dispatch({type: 'LOGIN', payload: user})
-  //   }
-  // }, [])
 
   return (
     <TweetsContext.Provider value={{...state, dispatch}}>
