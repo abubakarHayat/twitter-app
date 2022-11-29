@@ -38,24 +38,8 @@ const signupUser = async (req, res) => {
       uploadResult = await cloudinary.uploader.upload(image, {
         folder: 'users'
       })
-    }
-    else {
-      const imgFile = fs.readFileSync('../public/images/default_image.png')
-      uploadResult = await cloudinary.uploader.upload(imgFile, {
-        folder: 'users'
-      })
-    //   .then((result) => {
-    //     console.log(path.join(__dirname,'../public/images/default_image.jpg'))
-    //     uploadResult = cloudinary.uploader.upload(imgFile, {
-    //       folder: 'users'
-    //     }).then((res) => {
-    //       console.log(res)
-    //     })
-    //     .catch( err => console.log(err))
-    //   })
-    //   .catch((error) => {
-    //     console.log(error)
-    //   })
+    }else{
+      return res.status(422).json({error: "Profile image is required"})
     }
     const user = await User.signup(firstName, lastName, email, password, dob, uploadResult)
     const token = createToken(user._id)
