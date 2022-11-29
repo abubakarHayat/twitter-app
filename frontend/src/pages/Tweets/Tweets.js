@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Container from '../../components/Container/Container'
+import Feed from '../../components/Feed/Feed'
 import TweetForm from '../../components/TweetForm/TweetForm'
 import Tweet from '../../components/Tweet/Tweet'
 
@@ -23,7 +23,7 @@ const Tweets = () => {
       return
     }
     const fetchTweets = async () => {
-      const response = await fetch('/tweets',{
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/tweets`,{
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -39,7 +39,6 @@ const Tweets = () => {
       if(response.ok) {
         setIsLoading(false)
         setError('')
-        console.log(json)
         dispatch({ type: 'SET_TWEETS', payload: json })
       }
     }
@@ -48,11 +47,15 @@ const Tweets = () => {
 
 
   return (
-    <Container>
+    <Feed>
       {isLoading && <div>'Tweets loading, please wait!'</div>}
+      <div className="feed__header">
+        <h2>Home</h2>
+      </div>
       <TweetForm />
       {tweets && tweets.map(tweet => (
         <Tweet
+          userId={tweet._creator._id}
           firstName={tweet._creator.firstName} body={tweet.body}
           key={tweet._id} _id={tweet._id}
           imageSrc={tweet.image && tweet.image.url}
@@ -62,7 +65,7 @@ const Tweets = () => {
         />
       ))}
       {error && <div className='error'>{error}</div>}
-    </Container>
+    </Feed>
   )
 }
 

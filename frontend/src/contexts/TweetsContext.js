@@ -19,12 +19,6 @@ const tweetsReducer = (state, action) => {
       return {
         tweets: state.tweets.filter((t) => ( t._id !== action.payload._id))
       }
-    // case 'SET_TWEET_LIKES':
-    //   const tweetsTemp = [...state.tweets]
-    //   tweetsTemp.map((tweet) => {
-    //     return tweet.likedby = [...action.payload]
-    //   })
-    //  return { tweets: tweetsTemp }
     default:
       return state
   }

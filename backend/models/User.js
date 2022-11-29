@@ -28,10 +28,12 @@ const userSchema = new Schema({
   },
   image:{
     publicId: {
-      type: String
+      type: String,
+      required: true
     },
     url: {
-      type: String
+      type: String,
+      required: true
     }
   }
 

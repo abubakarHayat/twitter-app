@@ -1,3 +1,28 @@
-.tweet-hl {
-  border-bottom: 1px solid grey;
+.btn-comments {
+  background: none;
+  border: none
+}
+.card-header, .card-footer {
+  background-color: white;
+  text-align: justify;
+}
+.tweet-body {
+  border-top: 1px solid rgba(0,0,0,0.2);
+  padding: 5%;
+}
+.tweet-box {
+  height: 100%;
+  padding: 1%;
+}
+.btn-con {
+  border: 0;
+  background: none;
+}
+.btn-con:hover {
+  background-color: #dcdfe0;
+  border-radius: 50%;
+}
+.btn-con i {
+  font-size: 1.2rem;
+  color: #1DA1F2
 }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import './TweetForm.css'
 
 import useTweetsContext from '../../hooks/useTweetsContext'
 import useAuthContext from '../../hooks/useAuthContext'
@@ -7,6 +8,7 @@ const TweetForm = () => {
   const [body, setBody] = useState('')
   const [image, setImage] = useState(null)
   const [error, setError] = useState('')
+  const [alert, setAlert] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const { dispatch } = useTweetsContext()
   const { user } = useAuthContext()
@@ -20,7 +22,7 @@ const TweetForm = () => {
     }
 
     setIsLoading(true)
-    const response = await fetch('/tweets', {
+    const response = await fetch(`${process.env.REACT_APP_BASE_URL}/tweets`, {
       method: 'POST',
       body: JSON.stringify({body, image}),
       headers: {
@@ -39,7 +41,8 @@ const TweetForm = () => {
       setError('')
       setIsLoading(false)
       setBody('')
-      console.log('FORM',json)
+      setImage(null)
+      setAlert('You just tweeted!')
       dispatch({type: 'CREATE_TWEET', payload: json})
     }
 
@@ -54,34 +57,50 @@ const TweetForm = () => {
     }
   }
 
+  const handleCloseAlert = () => setAlert('')
+
 
   return (
-    <div className='row'>
-      <div className='col-md-10 mx-auto'>
-        <div className="card text-center mt-5">
+    <>
+        <div className="card text-center">
           <div className="card-body">
+            { alert && <div className="alert alert-success alert-dismissible fade show" role="alert">
+                        <p>{alert}</p>
+                        <button type="button" className="btn-close" data-bs-dismiss="alert" aria-label="Close" onClick={handleCloseAlert}></button>
+                      </div>}
           <form>
              <div className="mb-3">
-              <textarea
-                className="form-control" id="validationTextarea"
-                placeholder="What's happening?"
-                onChange={(e) => setBody(e.target.value)}
-                value={body}
-                required />
+              <div className='row'>
+                <div className='col-sm-1'>
+              <img  src={user.image} alt='profile' className="tweetbox__input" />
+                </div>
+                  <div className='col-sm-11 tweet-input-box'>
+                    <input
+                      className="form-control tweet-input" id="validationTextarea"
+                      placeholder="What's happening?"
+                      onChange={(e) => setBody(e.target.value)}
+                      value={body}
+                      required />
+                      {image && <img src={image} alt='tweet thumbnail' className='img-thumbnail' />}
+                  </div>
+                </div>
+              </div>
+            <div className='my-3 tweet-img btn-con'>
+            <label htmlFor='image-upload' id='img-up'>
+              <i className="bi bi-images">
+                <input className="tweet-file-input" id='image-upload'
+                   type="file"
+                  onChange={onImageUpload}
+                ></input>
+              </i>
+            </label>
             </div>
-            <div className='my-3'>
-            <input className="form-control form-control-md"
-              id="formFile" type="file"
-              onChange={onImageUpload}
-            />
-            </div>
-            <button type="submit" disabled={isLoading} onClick={handleSubmit} className="btn btn-primary">Tweet</button>
+            <button type="submit" disabled={isLoading} onClick={handleSubmit} className="tweet-btn">Tweet</button>
           </form>
           </div>
          {error && <div className='error card-footer text-muted'>{error}</div>}
         </div>
-      </div>
-    </div>
+        </>
   )
 }
 

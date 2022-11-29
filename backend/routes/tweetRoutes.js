@@ -1,6 +1,6 @@
 const express = require('express')
 const requireAuth = require('../middlewares/requireAuth')
-const { getTweet, getTweets, createTweet, deleteTweet, updateTweet, likeTweet, unlikeTweet } = require('../controllers/tweetController')
+const { getTweet, getTweets, createTweet, deleteTweet, updateTweet, likeTweet, unlikeTweet, getTweetsByUser } = require('../controllers/tweetController')
 
 const router = express.Router()
 
@@ -13,6 +13,8 @@ router.get('/unlike/:id', unlikeTweet)
 router.get('/', getTweets)
 
 router.post('/', createTweet)
+
+router.get('/user/:id', getTweetsByUser)
 
 router.get('/:id', getTweet)
 

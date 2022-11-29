@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from "react-router-dom";
 import { AuthContextProvider } from './contexts/AuthContext'
 import { TweetsContextProvider } from './contexts/TweetsContext';
+import { CommentsContextProvider } from './contexts/CommentsContext';
 
 import './index.css';
 import App from './App';
@@ -12,9 +13,11 @@ root.render(
   <React.StrictMode>
     <AuthContextProvider>
       <TweetsContextProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <CommentsContextProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </CommentsContextProvider>
       </TweetsContextProvider>
     </AuthContextProvider>
   </React.StrictMode>

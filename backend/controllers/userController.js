@@ -2,6 +2,9 @@ const User = require('../models/User')
 const jwt = require('jsonwebtoken')
 const { mongoose } = require('mongoose')
 const cloudinary = require('../utils/cloudinary')
+const path = require('path')
+const fs = require('fs')
+
 
 const createToken = (_id) => {
   return jwt.sign({_id}, process.env.JWT_SECRET, { expiresIn: '3d' })
@@ -36,6 +39,24 @@ const signupUser = async (req, res) => {
         folder: 'users'
       })
     }
+    else {
+      const imgFile = fs.readFileSync('../public/images/default_image.png')
+      uploadResult = await cloudinary.uploader.upload(imgFile, {
+        folder: 'users'
+      })
+    //   .then((result) => {
+    //     console.log(path.join(__dirname,'../public/images/default_image.jpg'))
+    //     uploadResult = cloudinary.uploader.upload(imgFile, {
+    //       folder: 'users'
+    //     }).then((res) => {
+    //       console.log(res)
+    //     })
+    //     .catch( err => console.log(err))
+    //   })
+    //   .catch((error) => {
+    //     console.log(error)
+    //   })
+    }
     const user = await User.signup(firstName, lastName, email, password, dob, uploadResult)
     const token = createToken(user._id)
 
@@ -57,7 +78,12 @@ const getUserProfile = async (req, res) => {
   if (!user){
     res.status(404).json({error: "No such user exist"})
   }else{
-    res.status(200).json({email: user.email, firstName: user.firstName, lastName: user.lastName, dob: user.dob})
+    res.status(200).json({
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      dob: user.dob,
+      image: user.image})
   }
 }
 const updateUserProfile = async (req, res) => {

@@ -1,6 +1,21 @@
 const mongoose = require('mongoose')
 const Comment = require('../models/Comment')
 
+const getComments = async (req, res) => {
+
+  Comment.find({})
+  .sort({createdAt: -1})
+  .populate('_commenter', 'firstName image')
+  .populate('tweetId', '_id')
+  .then((result) => {
+    res.status(200).json(result)
+  })
+  .catch((error) => {
+    res.status({error: error.message})
+  })
+
+}
+
 const getCommentsPerTweet = async (req, res) => {
   const id = req.params.id
 
@@ -27,7 +42,7 @@ const createComment = async (req, res) => {
       _commenter,
       tweetId
       })
-    const result = await comment.populate('_commenter', 'firstName image')
+    const result = await (await comment.populate('_commenter', 'firstName image')).populate('tweetId', '_id')
 
     res.status(200).json(result)
   } catch (error){
@@ -43,7 +58,7 @@ const deleteComment = async (req, res) => {
     return res.status(404).json({error: "Not a valid ID"})
   }
 
-  Tweet.findOneAndDelete({_id})
+  Comment.findOneAndDelete({_id})
   .then((result) => {
     res.status(200).json(result)
   })
@@ -62,6 +77,7 @@ const updateComment = async (req, res) => {
   }
   Comment.findByIdAndUpdate(_id, {body}, {new: true })
   .populate('_commenter', 'firstName image')
+  .populate('tweetId', '_id')
   .then((doc) => {
       res.status(200).json(doc)
   })
@@ -71,4 +87,4 @@ const updateComment = async (req, res) => {
 }
 
 
-module.exports = { getCommentsPerTweet, createComment, updateComment, deleteComment }
+module.exports = { getComments, getCommentsPerTweet, createComment, updateComment, deleteComment }

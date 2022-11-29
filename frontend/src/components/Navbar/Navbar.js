@@ -5,7 +5,7 @@ import useAuthContext from '../../hooks/useAuthContext'
 
 import './Navbar.css'
 
-const Navbar = () => {
+const Navbar = ({ children }) => {
   const { logout } = useLogout()
   const { user } = useAuthContext()
 
@@ -14,42 +14,58 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="navbar navbar-expand-lg bg-light">
-      <div className="container-fluid">
-        <a className="navbar-brand" href="/">Twitter</a>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarScroll">
-          <ul className="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll">
-            <li className="nav-item">
-              <a className="nav-link" aria-current="page" href='/'>Tweets</a>
-            </li>
-            <li className="nav-item">
-              <Link to='/profile' className="nav-link" >Profile</Link>
-            </li>
-          </ul>
-          { user &&
-            ( <>
-              <button className="btn btn-outline-warning" onClick={handleClick}>Log Out</button>
-              <div className='user-profile-sm'>
-                <img src={user.image} alt='profile' className='rounded-circle' style={{width: "50px"}}/>
-                  {console.log(user)}
-                {<p>{user.email}</p>}
-              </div>
-              </>
-              )
-          }
-          { !user &&
-            ( <div>
-                <Link to='/login'><button className="btn btn-outline-success">Log In</button></Link>
-                <Link to='/signup'><button className="btn btn-outline-primary">Sign Up</button></Link>
-              </div>
-              )
-          }
+    <div className='container-fluid'>
+        <div className='row'>
+            <div className='col-sm-4 twitter-bar'>
+                <div className="content">
+                    <div className="sidebar">
+                        <div className="sidebar__brand">
+                            <i className="fa fa-twitter"></i>
+                        </div>
+                        <Link to="/" className="sidebar__item">
+                            <i className="sidebar__item__icon bi bi-house-fill"></i>
+                            <span className="sidebar__item__text">Home</span>
+                        </Link>
+                        {user &&
+                        <Link to="/update-profile" className="sidebar__item">
+                            <i className="sidebar__item__icon bi bi-person"></i>
+                            <span className="sidebar__item__text">Update Profile</span>
+                        </Link>}
+                        { !user &&
+                            ( <div>
+                                <Link className='sidebar__item' to='/login'>
+                                    <i className="sidebar__item__icon bi bi-box-arrow-in-right"></i>
+                                    <span className="sidebar__item__text">Log In</span>
+                                </Link>
+                                <Link className='sidebar__item' to='/signup'>
+                                    <i className="sidebar__item__icon  bi bi-check-lg"></i>
+                                    <span className="sidebar__item__text">Sign Up</span>
+                                </Link>
+                            </div>
+                            )
+                        }
+                        { user &&
+                            ( <>
+                            <Link className='sidebar__item' to={`/profile/${user._id}`}>
+                                <i className="sidebar__item__icon bi bi-at"></i>
+                                <img src={user.image} alt='profile' className='rounded-circle' style={{width: "50px"}}/>
+                                {<p className='user-email'>{user.email}</p>}
+                            </Link>
+                            <button className="btn-log sidebar__item" onClick={handleClick}>
+                                <i className="sidebar__item__icon bi bi-box-arrow-left"></i>
+                                <span className="sidebar__item__text">Log Out</span>
+                            </button>
+                            </>
+                            )
+                        }
+                    </div>
+                </div>
+            </div>
+            <div className='col-sm-4 twitter-bar'>
+                {children}
+            </div>
         </div>
-      </div>
-    </nav>
+    </div>
   )
 }
 

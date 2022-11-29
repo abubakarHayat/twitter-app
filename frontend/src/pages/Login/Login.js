@@ -12,7 +12,7 @@ const Login = () => {
     await login(email, password)
   }
   return (
-    <div className='container'>
+    <div className='container update-profile-box'>
       <h1>Log In</h1>
       <div className='row'>
         <div className='col-md-6 mx-auto'>
@@ -36,7 +36,7 @@ const Login = () => {
                 value={password} required
               />
             </div>
-            <button type="submit" disabled={isLoading} onClick={handleClick} className="btn btn-primary">Log In</button>
+            <button type="submit" disabled={isLoading} onClick={handleClick} className="tweet-btn-lg">Log In</button>
           </form>
           {error && <div className='error'>{error}</div>}
         </div>

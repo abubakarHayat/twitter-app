@@ -1,125 +1,110 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+
+import Feed from '../../components/Feed/Feed'
+import TweetForm from '../../components/TweetForm/TweetForm'
+import Tweet from '../../components/Tweet/Tweet'
+
 import useAuthContext from '../../hooks/useAuthContext'
 
+
 const Profile = () => {
-  const [email, setEmail] = useState('')
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [password, setPassword] = useState('')
-  const [dob, setDob] = useState('')
-  const [image, setImage] = useState(null)
+  const [ userTweets, setUserTweets ] = useState([])
+  const [userProf, setUserProf] = useState(null)
+  const { id } = useParams()
+  const { user } = useAuthContext()
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [alert, setAlert] = useState('')
-  const { user, dispatch } = useAuthContext()
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
+
+  const checkLiked = (checkList) => {
+    return checkList.includes(user._id)
+  }
+  useEffect(() => {
     if (!user){
+      setError('User must ne logged in!')
       return
     }
-    const data = JSON.stringify({firstName, lastName, email, password, dob, image})
     setIsLoading(true)
-    const response = await fetch(`/${user._id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': user.token
-      },
-      body: data
-    })
+    const fetchUserProfile = async () => {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/${id}`,{
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': user.token
+        }
+      })
 
-    const json = await response.json()
-    if (!response.ok){
-      setError(json.error)
-      setIsLoading(false)
-    }
-    if (response.ok){
-      console.log(json)
-      setIsLoading(false)
-      setError('')
-      setAlert('Profile succesfully updated!')
-      if (json.email){
-        const newUser = JSON.parse(localStorage.getItem('user'))
-        newUser.email = json.email
-        dispatch({type: 'UPDATE_EMAIL', payload: newUser})
-        localStorage.setItem('user', JSON.stringify(newUser))
+      const json = await response.json()
+
+      if (!response.ok){
+        setError(json.error)
+        setIsLoading(false)
+      }
+      if (response.ok){
+        setError('')
+        setIsLoading(false)
+        setUserProf(json)
       }
     }
-  }
+    const fetchTweets = async () => {
+      const response = await fetch(`${process.env.REACT_APP_BASE_URL}/tweets/user/${id}`,{
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': user.token
+        }
+      })
+      const json = await response.json()
 
-  const onImageUpload = (e) => {
-    const imageFile = e.target.files[0]
-    const reader = new FileReader()
-    reader.readAsDataURL(imageFile)
-    reader.onloadend = () => {
-      setImage(reader.result)
+      if (!response.ok){
+        setIsLoading(false)
+        setError(json.error)
+      }
+      if(response.ok) {
+        setIsLoading(false)
+        setError('')
+        setUserTweets(json)
+      }
     }
-  }
+
+    fetchUserProfile()
+    fetchTweets()
+  }, [user, id])
+
 
   return (
-    <div className='container'>
-      <h1>Profile</h1>
-      {alert && <div className='alert'>{alert}</div>}
-      <div className='row'>
-        <div className='col-md-6 mx-auto'>
-          <form className='mt-5' onSubmit={handleSubmit}>
-            <div className="input-group mb-3">
-              <input
-                type="text" className="form-control"
-                placeholder="First Name" aria-label="First Name"
-                onChange={(e) => setFirstName(e.target.value)}
-                value={firstName}
-              />
-              <input
-                type="text" className="form-control"
-                placeholder="Last Name" aria-label="Last Name"
-                onChange={(e) => setLastName(e.target.value)}
-                value={lastName}
-              />
-            </div>
-            <div className="mb-3">
-              <input
-                type="email" className="form-control"
-                placeholder="Email" aria-label="Email"
-                id="inputEmail1" aria-describedby="emailHelp"
-                onChange={(e) => setEmail(e.target.value)}
-                value={email}
-              />
-              <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
-            </div>
-            <div className="mb-3">
-              <input
-                type="password" className="form-control"
-                placeholder="Password" aria-label="Password" id="inputPassword"
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="dob">Date of birth</label>
-              <input
-                id="dob" className="form-control"
-                type="date"
-                onChange={(e) => setDob(e.target.value)}
-                value={dob}
-              />
-              <span id="dateSelected"></span>
-            </div>
-            <div className='my-3'>
-              <input className="form-control form-control-md"
-                id="formFile" type="file"
-                onChange={onImageUpload}
-              />
-            </div>
-            <button type="submit" disabled={isLoading} className="btn btn-primary">Update profile</button>
-          </form>
-        </div>
-        {error &&  <div className="error">{error}</div>}
-      </div>
+    <Feed>
+    <div className="feed__header">
+      <h2>{userProf && userProf.firstName}'s Profile</h2>
     </div>
+      {isLoading && <div>'Tweets loading, please wait!'</div>}
+      {userProf && <div className='container-fluid w-100' style={{backgroundColor: 'white', padding: '3%'}}>
+        <div className='row'>
+          <div className='col-md-12'>
+            <img src={userProf.image.url} alt='user profile' className='rounded-circle' style={{maxWidth: '100%'}} />
+          </div>
+        </div>
+        <div className='row'>
+          <div className='col-md-12'>
+            <h3>{`${userProf.firstName} ${userProf.lastName}`}</h3>
+          </div>
+        </div>
+      </div>}
+      {(user._id === id) && <TweetForm /> }
+      {userTweets && userTweets.map(tweet => (
+        <Tweet
+          firstName={tweet._creator.firstName} body={tweet.body}
+          key={tweet._id} _id={tweet._id}
+          imageSrc={tweet.image && tweet.image.url}
+          profileImg={tweet._creator.image.url}
+          likesC={tweet.likesCount}
+          like={checkLiked(tweet.likedBy)}
+        />
+      ))}
+      {error && <div className='error'>{error}</div>}
+    </Feed>
   )
-
 }
 
 export default Profile

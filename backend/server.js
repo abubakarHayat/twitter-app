@@ -1,20 +1,20 @@
 require('dotenv').config()
 
 const express = require('express')
-
 const mongoose = require('mongoose')
+const cors = require('cors')
+const path = require('path')
 
 const userRoutes = require('./routes/userRoutes')
-
 const tweetRoutes = require('./routes/tweetRoutes')
-
 const commentRoutes = require('./routes/commentRoutes')
 
 const app = express()
+app.use(cors())
 
 app.use(express.json({ limit: '2mb', extended: true}))
-app.use(express.urlencoded({limit: "10mb", extended: true, parameterLimit: 50000}))
-
+app.use(express.urlencoded({limit: "2mb", extended: true, parameterLimit: 50000}))
+app.use(express.static(path.join(__dirname, 'public')))
 app.get('/', (req, res) => {
   res.json({msg: 'Welcome to twitter!'})
 })

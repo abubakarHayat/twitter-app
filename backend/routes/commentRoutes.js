@@ -1,10 +1,12 @@
 const express = require('express')
 const requireAuth = require('../middlewares/requireAuth')
-const { getCommentsPerTweet, createComment, updateComment, deleteComment } = require('../controllers/commentController')
+const { getComments, getCommentsPerTweet, createComment, updateComment, deleteComment } = require('../controllers/commentController')
 
 const router = express.Router()
 
 router.use(requireAuth)
+
+router.get('/comments', getComments)
 
 router.get('/:id/comments', getCommentsPerTweet)
 

@@ -10,7 +10,7 @@ const useLogin = (email, password) => {
     setIsLoading(true)
     setError(null)
 
-    const response = await fetch('/login', {
+    const response = await fetch(`${process.env.REACT_APP_BASE_URL}/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({email, password})
@@ -28,7 +28,7 @@ const useLogin = (email, password) => {
     }
   }
 
-  return { login, isLoading, error}
+  return { login, isLoading, error }
 
 }
 

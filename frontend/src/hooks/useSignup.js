@@ -10,7 +10,7 @@ const useSignup = (firstName, lastName, email, password, dob) => {
     setIsLoading(true)
     setError(null)
 
-    const response = await fetch('/signup', {
+    const response = await fetch(`${process.env.REACT_APP_BASE_URL}/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({firstName, lastName, email, password, dob, image})

@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import useTweetsContext from '../../hooks/useTweetsContext'
 import useAuthContext from '../../hooks/useAuthContext'
 
-const TweetUpdateForm = ({ _id, initialBody }) => {
+const TweetUpdateForm = ({ _id, initialBody, toggleEdit }) => {
   const [body, setBody] = useState(initialBody)
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -18,7 +18,7 @@ const TweetUpdateForm = ({ _id, initialBody }) => {
       return
     }
     setIsLoading(true)
-    const response = await fetch(`/tweets/${_id}`, {
+    const response = await fetch(`${process.env.REACT_APP_BASE_URL}/tweets/${_id}`, {
       method: 'PATCH',
       body: JSON.stringify({body}),
       headers: {
@@ -38,6 +38,7 @@ const TweetUpdateForm = ({ _id, initialBody }) => {
       setIsLoading(false)
       setBody('')
       dispatch({type: 'UPDATE_TWEET', payload: json})
+      toggleEdit()
     }
 
   }
@@ -46,14 +47,14 @@ const TweetUpdateForm = ({ _id, initialBody }) => {
     <>
       <form className="mt-5">
         <div className="mb-3">
-          <textarea
-            className="form-control" id="validationTextarea"
+          <input
+            className="form-control tweet-input" id="validationTextarea"
             placeholder="What's happening?"
             onChange={(e) => setBody(e.target.value)}
             value={body}
             required />
         </div>
-        <button type="submit" disabled={isLoading} onClick={handleUpdate} className="btn btn-primary">Update</button>
+        <button type="submit" disabled={isLoading} onClick={handleUpdate} className="tweet-btn">Update</button>
       </form>
       {error && <div className='error'>{error}</div>}
     </>

@@ -14,6 +14,7 @@ const Signup = () => {
     e.preventDefault()
 
     await signup(firstName, lastName, email, password, dob, image)
+    setImage(null)
   }
   const onImageUpload = (e) => {
     const imageFile = e.target.files[0]
@@ -24,7 +25,7 @@ const Signup = () => {
     }
   }
   return (
-    <div className='container'>
+    <div className='container update-profile-box'>
       <h1>Registeration</h1>
       <div className='row'>
         <div className='col-md-6 mx-auto'>
@@ -71,13 +72,18 @@ const Signup = () => {
               />
               <span id="dateSelected"></span>
             </div>
-            <div className='my-3'>
-              <input className="form-control form-control-md"
-                id="formFile" type="file"
-                onChange={onImageUpload}
-              />
+            <div className='my-3 tweet-img-div'>
+            <label htmlFor='image-upload' id='img-up'>
+              <i className="bi bi-image-fill">
+                <input className="tweet-file-input" id='image-upload'
+                   type="file"
+                  onChange={onImageUpload}
+                />
+              </i>
+            </label>
+            {image && <img src={image} alt='profile' className='img-thumbnail'/>}
             </div>
-            <button type="submit" disabled={isLoading} className="btn btn-primary">Singup</button>
+            <button type="submit" disabled={isLoading} className="tweet-btn-lg">Singup</button>
           </form>
         </div>
         {error &&  <div className='error'>{error}</div>}

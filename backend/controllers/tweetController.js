@@ -1,10 +1,11 @@
 const mongoose = require('mongoose')
 const cloudinary = require('../utils/cloudinary')
 const Tweet = require('../models/Tweet')
+const Comment = require('../models/Comment')
 
 const getTweets = async (req, res) => {
 
-  Tweet.find({}).sort({createdAt: -1}).populate('_creator', 'firstName image')
+  Tweet.find({}).sort({createdAt: -1}).populate('_creator', '_id firstName image')
   .then((result) => {
     res.status(200).json(result)
   })
@@ -29,15 +30,35 @@ const getTweet = async (req, res) => {
   }
 }
 
+const getTweetsByUser = async (req, res) => {
+  const id = req.params.id
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(404).json({error: "Not a valid ID"})
+  }
+
+  Tweet.find({_creator: id})
+  .populate('_creator', '_id firstName image')
+  .then((result) => {
+    res.status(200).json(result)
+  })
+  .catch((error) => {
+    res.status(422).json({error: error.message})
+  })
+
+}
+
 const createTweet = async (req, res) => {
   let { body, likes: likesCount, image } = req.body
   const _creator =  req.user._id
 
+
+  try {
     if (!body){
       throw Error('Tweet body cannot be blank')
     }
     likesCount = null ?? 0
-  try {
+
     let uploadResult = {
       public_id: null,
       secure_url: null
@@ -82,6 +103,13 @@ const deleteTweet = async (req, res) => {
     res.status(422).json({error: error.message})
   }
 
+  Comment.deleteMany({tweetId: _id})
+  .then((result) => {
+    console.log(result)
+  })
+  .catch((error) => {
+    console.log(error)
+  })
   Tweet.findOneAndDelete({_id})
   .then((result) => {
     res.status(200).json(result)
@@ -156,4 +184,4 @@ const unlikeTweet = async (req, res) => {
 
 }
 
-module.exports = { getTweet, getTweets, createTweet, deleteTweet, updateTweet, likeTweet, unlikeTweet }
+module.exports = { getTweet, getTweets, createTweet, deleteTweet, updateTweet, likeTweet, unlikeTweet, getTweetsByUser }

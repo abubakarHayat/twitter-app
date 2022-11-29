@@ -1,0 +1,28 @@
+.update-profile-box {
+  background-color: white;
+  padding: 5%;
+}
+.tweet-img-div {
+  width: 14%;
+  border-radius: 50%;
+}
+.tweet-img-div:hover {
+  background-color: #dcdfe0;
+  width: 14%;
+  border-radius: 50%;
+}
+
+.tweet-btn-lg {
+  background-color: #1DA1F2;
+  width: 8rem;
+  height: 2.5rem;
+  color: white;
+  border-radius: 50px;
+  border-color: none;
+  border: none;
+  font-weight: bold;
+}
+
+.update-btn:hover {
+  background-color: #028fe6;
+}

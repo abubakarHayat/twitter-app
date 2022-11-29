@@ -1,0 +1,45 @@
+.tweetbox__input {
+  height: 40px;
+}
+
+.tweet-file-input {
+  display: none;
+}
+.bi-image-fill {
+  font-size: 2rem;
+}
+.tweet-img {
+  height: 100%;
+  width: 7%;
+}
+.tweet-img:hover {
+  background-color: #dcdfe0;
+  border-radius: 50%;
+}
+.tweet-input {
+  border: none;
+  border-radius: 0;
+  line-height: 5;
+}
+.tweet-input:focus {
+  border-radius: 0;
+  box-shadow: inset 0 -1px 0 #ddd;
+}
+.card {
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid var(--twitter-background);
+}
+.feed__header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 100;
+  border: 1px solid var(--twitter-background);
+  padding: 15px 20px;
+}
+
+.feed__header h2 {
+  font-size: 20px;
+  font-weight: 800;
+}

@@ -1,0 +1,6 @@
+.comment-header {
+  border: none;
+}
+.comment-card {
+  border-left: 10px solid rgba(0,0,0,0.5);
+}
