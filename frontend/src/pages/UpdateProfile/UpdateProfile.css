@@ -1,10 +1,10 @@
-.update-profile-box {
-  background-color: white;
-  padding: 5%;
-}
 .tweet-img-div {
   width: 14%;
   border-radius: 50%;
+}
+.profile-box {
+  background: white;
+  height: 95vh;
 }
 .tweet-img-div:hover {
   background-color: #dcdfe0;

@@ -47,7 +47,7 @@ const LikeCheckbox = ({ _id, likesCount, handleLikes, liked }) => {
             </g>
           </g>
         </svg>
-        <p>{likesCount}</p>
+        <p className="text-center">{likesCount}</p>
       </label>
     </>
   )

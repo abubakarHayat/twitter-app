@@ -21,13 +21,15 @@ const getTweet = async (req, res) => {
     return res.status(404).json({error: "Not a valid ID"})
   }
 
-  const tweet = await Tweet.findById({_id})
+  Tweet.findById({_id})
+  .populate('_creator', '_id firstName image')
+  .then((result) => {
+    res.status(200).json(result)
+  })
+  .catch((error) => {
+    res.status(422).json({error: error.message})
+  })
 
-  if (!tweet){
-    res.status(404).json({error: "No such tweet exist"})
-  }else{
-    res.status(200).json({tweet})
-  }
 }
 
 const getTweetsByUser = async (req, res) => {
@@ -95,6 +97,9 @@ const deleteTweet = async (req, res) => {
   }
   try{
     const tweet = await Tweet.findById(_id)
+    if (!tweet._creator.equals(req.user._id)){
+      return res.status(401).json({ error: 'Request not authorized'})
+    }
     if (tweet.image.publicId){
     const { publicId } = tweet.image
     await cloudinary.uploader.destroy(publicId);

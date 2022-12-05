@@ -10,9 +10,11 @@ const Login = () => {
     e.preventDefault()
 
     await login(email, password)
+    const modal = document.getElementById('closeModalBtn')
+    modal.click()
   }
   return (
-    <div className='container update-profile-box'>
+    <div className='container'>
       <h1>Log In</h1>
       <div className='row'>
         <div className='col-md-6 mx-auto'>

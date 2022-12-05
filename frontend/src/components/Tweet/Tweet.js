@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom'
 import './Tweet.css'
 import './Tweet.scss'
 
-import Comments from '../Comments/Comments'
 import LikeCheckbox from '../LikeCheckbox/LikeCheckbox'
 import TweetUpdateForm from '../TweetUpdateForm/TweetUpdateForm'
 import useAuthContext from '../../hooks/useAuthContext'
@@ -12,7 +11,6 @@ import useTweetsContext from '../../hooks/useTweetsContext'
 const Tweet = ({ firstName, body, _id, imageSrc, profileImg, likesC, like, userId }) => {
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [loadComments, setLoadComments] = useState(false)
   const [doEdit, setDoEdit] = useState(false)
   const [haveAuth, setHaveAuth] = useState(false)
   const [likesCount, setLikesCount] = useState(likesC)
@@ -109,20 +107,11 @@ const Tweet = ({ firstName, body, _id, imageSrc, profileImg, likesC, like, userI
                   <Link to={`/profile/${userId}`}  >
                     <img src={profileImg} alt='profile' className='rounded-circle' style={{width: '40px', height: '40px'}}/>
                   </Link>
-                  </div>
+                </div>
                   <div className='col-sm-9 text-start'>
                   <Link to={`/profile/${userId}`} style={{textDecoration: 'none'}}>
-                    <h5>@{firstName}</h5>
+                    <p><span className='tweet-user-name'>{firstName} &nbsp;</span> <span className='text-muted'>@{firstName}</span></p>
                   </Link>
-                    {haveAuth && doEdit ? <TweetUpdateForm initialBody={body} _id={_id} toggleEdit={toggleEdit} /> :
-                    <>
-                    <p className="card-text tweet-body">{body}</p>
-                    {imageSrc &&
-                    <div className='my-2'>
-                        <img src={imageSrc} alt='tweet' className='img-card-top' />
-                    </div>}
-                    </>
-                    }
                   </div>
                 <div className='col-sm-2'>
                   {haveAuth && <button className=' btn-con btn-sm mx-1' disabled={isLoading} onClick={handleDelete}><i className="bi bi-trash3"></i></button>}
@@ -132,6 +121,19 @@ const Tweet = ({ firstName, body, _id, imageSrc, profileImg, likesC, like, userI
                     <button className='btn-con btn-sm mx-1' onClick={toggleEdit}><i className="bi bi-x-lg"></i></button>)}
                 </div>
               </div>
+              <div className='row'>
+                <div className='col-md-12'>
+                    {haveAuth && doEdit ? <TweetUpdateForm initialBody={body} _id={_id} toggleEdit={toggleEdit} /> :
+                      <>
+                      <h5>{body}</h5>
+                      {imageSrc &&
+                      <div className='my-2'>
+                          <img src={imageSrc} alt='tweet' className='' />
+                      </div>}
+                      </>
+                    }
+                </div>
+              </div>
             </div>
             <div className="">
               <div className='row'>
@@ -139,10 +141,10 @@ const Tweet = ({ firstName, body, _id, imageSrc, profileImg, likesC, like, userI
                   <LikeCheckbox _id={_id} likesCount={likesCount} handleLikes={handleLikes} liked={liked} />
                 </div>
                 <div className='col-sm-1'>
-                  <button className='btn-comments btn-con' onClick={() => setLoadComments(!loadComments)}><i className="bi bi-chat"></i></button>
+                  <Link to={`/tweet/${_id}`}><button className='btn-comments btn-con'><i className="bi bi-chat"></i></button>
+                  </Link>
                 </div>
               </div>
-              {loadComments && <Comments tweetId={_id} />}
             </div>
             {error && <div className="error">
               {error}
@@ -150,6 +152,7 @@ const Tweet = ({ firstName, body, _id, imageSrc, profileImg, likesC, like, userI
           </div>
     </>
   )
+
 }
 
 export default Tweet

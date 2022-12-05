@@ -50,18 +50,24 @@ const Comment = ({profileImg, firstName, body, _id, userId }) => {
 
   return (
     <>
-      <div className='row my-1'>
-        <div className='col-md-10 mx-auto'>
           <div className="card comment-card">
-            <div className="card-header comment-header">
-              <img src={profileImg} alt='profile' className='rounded-circle' style={{width: '30px'}}/>
-              <p><strong>@{firstName}</strong></p>
-            </div>
             <div className="card-body">
-              {haveAuth && doEdit ? <CommentUpdateForm _id={_id} initalBody={body} toggleEdit={toggleEdit}/>
-              :
-              <p className="card-text text-start">{body}</p>
-              }
+              <div className="row">
+                <div className='col-md-1 col-sm-2'>
+                  <img src={profileImg} alt='profile' className='rounded-circle' style={{width: '40px'}}/>
+                </div>
+                <div className='col-md-10'>
+                  <p>@{firstName}</p>
+                </div>
+              </div>
+              <div className='row my-1'>
+                <div className='col-md-12'>
+                {haveAuth && doEdit ? <CommentUpdateForm _id={_id} initalBody={body} toggleEdit={toggleEdit}/>
+                :
+                <h6>{body}</h6>
+                }
+                </div>
+              </div>
               {haveAuth && <button className=' btn-con btn-sm mx-1' disabled={isLoading} onClick={handleDelete}><i className="bi bi-trash3"></i></button>}
               {haveAuth && (!doEdit ?
                 <button className='btn-con btn-sm mx-1' onClick={toggleEdit}><i className="bi bi-pencil-square"></i></button>
@@ -72,8 +78,6 @@ const Comment = ({profileImg, firstName, body, _id, userId }) => {
               {error}
             </div>}
           </div>
-        </div>
-      </div>
     </>
   )
 }

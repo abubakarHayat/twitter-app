@@ -65,7 +65,7 @@ const UpdateProfile = () => {
     <div className="feed__header">
       <h2>Update Profile</h2>
     </div>
-    <div className='container update-profile-box'>
+    <div className='container profile-box'>
       {alert && <div className='alert'>{alert}</div>}
       <div className='row'>
         <div className='col-md-6 mx-auto'>
@@ -115,7 +115,7 @@ const UpdateProfile = () => {
             <div className='my-3 tweet-img-div'>
             <label htmlFor='image-upload' id='img-up'>
               <i className="bi bi-image-fill">
-                <input className="tweet-file-input" id='image-upload'
+                <input className="tweet-file-input" id='image-upload2'
                    type="file"
                   onChange={onImageUpload}
                 />

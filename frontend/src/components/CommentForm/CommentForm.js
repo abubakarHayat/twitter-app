@@ -47,27 +47,26 @@ const CommentForm = ({ tweetId }) => {
 
 
   return (
-    <div className='row'>
-      <div className='col-md-10 mx-auto'>
-        <div className="card text-center mt-5">
+        <div className="card">
           <div className="card-body">
-          <form>
-             <div className="mb-3">
-              <input
-                type='text'
-                className="form-control tweet-input" id="validationTextarea"
-                placeholder="Comment something!"
-                onChange={(e) => setBody(e.target.value)}
-                value={body}
-                required />
+            <div className='row'>
+              <div className='col-md-12'>
+                <img src={user.image} alt='user' className='rounded-circle' style={{height: "50px", width: '50px'}}/>
+                <form>
+                    <input
+                      type='text'
+                      className="form-control tweet-input my-1" id="validationTextarea"
+                      placeholder="Comment something!"
+                      onChange={(e) => setBody(e.target.value)}
+                      value={body}
+                      required />
+                  <button type="submit" disabled={isLoading} onClick={handleComment} className="tweet-btn-lg">Comment</button>
+                </form>
+              </div>
             </div>
-            <button type="submit" disabled={isLoading} onClick={handleComment} className="tweet-btn-lg">Comment</button>
-          </form>
           </div>
          {error && <div className='error card-footer text-muted'>{error}</div>}
         </div>
-      </div>
-    </div>
   )
 }
 

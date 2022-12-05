@@ -1,9 +1,9 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 
 import Navbar from './components/Navbar/Navbar';
-import Login from './pages/Login/Login'
-import Signup from './pages/Signup/Signup';
+import LoginOrSignup from './pages/LoginOrSignup/LoginOrSignup'
 import Tweets from "./pages/Tweets/Tweets";
+import TweetComments from "./pages/TweetComments/TweetComments";
 import useAuthContext from "./hooks/useAuthContext";
 
 import './App.css';
@@ -21,23 +21,23 @@ function App() {
         <Routes>
           <Route
             path='/'
-            element={user ? <Tweets /> : <Navigate to='/signup' />}
+            element={user ? <Tweets /> : <Navigate to='/on-board' />}
             />
           <Route
-            path='/login'
-            element={!user ? <Login /> : <Navigate to='/update-profile' />}
+            path='/on-board'
+            element={!user ? <LoginOrSignup /> : <Navigate to='/' />}
             />
           <Route
             path='/update-profile'
-            element={user ? <UpdateProfile /> : <Navigate to='/login' />}
-            />
-          <Route
-            path='/signup'
-            element={!user ? <Signup /> : <Navigate to='/update-profile' />}
+            element={user ? <UpdateProfile /> : <Navigate to='/on-board' />}
             />
           <Route
             path='/profile/:id'
-            element={user ? <Profile /> : <Navigate to='/login' />}
+            element={user ? <Profile /> : <Navigate to='/on-board' />}
+            />
+          <Route
+            path='/tweet/:id'
+            element={user ? <TweetComments /> : <Navigate to='/on-board' />}
             />
           <Route
             path='*'

@@ -15,6 +15,9 @@ const Signup = () => {
 
     await signup(firstName, lastName, email, password, dob, image)
     setImage(null)
+    const modal = document.getElementById('closeModalBtn')
+    modal.click()
+
   }
   const onImageUpload = (e) => {
     const imageFile = e.target.files[0]
